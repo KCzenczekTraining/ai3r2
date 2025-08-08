@@ -12,6 +12,8 @@ It uses the OpenAI API to generate an answer based on the question fetched from 
 No additional web search is required as the LLM can answer the question directly, as the questions 
 are based on historical events.
 
+- `E02` This script automates a conversation with an external API and OpenAI's GPT model. It sends an initial POST request to start the conversation, queries OpenAI's GPT model for an answer to the received question, and later sends the answer back to the API to retrieve a required phrase. All to imitate a robot-robot interaction.
+
 ## Requirements
 
 The projects use various Python libraries listed in the `requirements.txt` file. To install all dependencies, run:
@@ -20,6 +22,6 @@ The projects use various Python libraries listed in the `requirements.txt` file.
 pip install -r requirements.txt
 ```
 
-## Author
+## Authors
 
-KCzenczek
+KCzenczek and the tiny but mighty friend ![Copilot Icon](https://github.githubassets.com/images/icons/copilot/cp-head-sq.png)
