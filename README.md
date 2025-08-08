@@ -24,4 +24,4 @@ pip install -r requirements.txt
 
 ## Authors
 
-KCzenczek and the tiny but mighty friend ![Copilot Icon](https://github.githubassets.com/images/icons/copilot/cp-head-sq.png)
+KCzenczek and the tiny but mighty friend <img src="other_files/github-copilot-icon.svg" alt="Copilot Icon" style="width:50px; height:50px;">
