@@ -14,6 +14,8 @@ are based on historical events.
 
 - `E02` This script automates a conversation with an external API and OpenAI's GPT model. It sends an initial POST request to start the conversation, queries OpenAI's GPT model for an answer to the received question, and later sends the answer back to the API to retrieve a required phrase. All to imitate a robot-robot interaction.
 
+- `E03` This script processes and validates test data using OpenAI's GPT model. It downloads test data from an external API, evaluates arithmetic questions, updates answers, and sends a report to a specified endpoint. 
+
 ## Requirements
 
 The projects use various Python libraries listed in the `requirements.txt` file. To install all dependencies, run:
