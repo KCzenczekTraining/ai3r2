@@ -1,6 +1,7 @@
 """
-This script is designed to process and validate test data, leveraging OpenAI's GPT model for intelligent responses.
-It integrates with external APIs to download data, validate answers, and send reports for calibration purposes.
+This script automates data processing and validation.
+It downloads a text file, evaluates arithmetic questions,
+updates the answers using OpenAI's GPT model, and submits a report to a Agents HQ.
 The program uses Python 3.10 features and adheres to PEP8 standards for clean and maintainable code.
 
 Steps:
