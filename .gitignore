@@ -178,4 +178,10 @@ pyrightconfig.json
 # .txt
 *.txt
 
+# VSCode
+*.code-workspace
+.vscode/
+
+.idea
+
 # End of https://www.toptal.com/developers/gitignore/api/python
