@@ -16,6 +16,9 @@ are based on historical events.
 
 - `E03` This script automates data processing and validation. It downloads a text file, evaluates arithmetic questions, updates the answers using OpenAI's GPT model, and submits a report to a Agents HQ.
 
+- `E04` As the assignment for this topic was more about creating a proper prompt in an external app, I decided to focus here on two things: integration with Langfuse and memory management. 
+`langfuse_python` This is a Flask-based API for orchestrating chat completions and observability using Langfuse and OpenAI. It exposes a `/api/chat` endpoint that receives chat requests, creates traces and spans for each request using Langfuse, and calls OpenAI to generate chat completions. The application logs all major steps and errors for traceability, and supports graceful shutdown. Services include `ChatService` (handles OpenAI completions) and `LangfuseService` (manages traces, spans, and generations for observability and debugging).
+
 ## Requirements
 
 The projects use various Python libraries listed in the `requirements.txt` file. To install all dependencies, run:
