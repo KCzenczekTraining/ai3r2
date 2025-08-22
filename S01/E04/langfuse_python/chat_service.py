@@ -1,11 +1,11 @@
+
 import json
 import logging
-from typing import Any
-
+from typing import Any, Dict
 from S01.E04.langfuse_python.openai_service import OpenAIService
 from S01.utils_S01 import configure_logging
 
-# Configure logging using the generic function
+
 configure_logging("logs_langfuse_python.txt")
 
 
@@ -14,12 +14,14 @@ class ChatService:
     Service for handling chat completions using OpenAI.
     """
 
-    def __init__(self):
+
+    def __init__(self) -> None:
         """
         Initialize OpenAI service.
         """
         logging.info("Initializing ChatService and OpenAIService.")
-        self.openai_service = OpenAIService()
+        self.openai_service: OpenAIService = OpenAIService()
+
 
     def completion(self, messages: Any, model: str) -> Any:
         """
@@ -36,13 +38,11 @@ class ChatService:
         if isinstance(messages, dict):
             messages = json.dumps(messages)
 
-        logging.info("Generating completion with model: %s", model)
-        result = self.openai_service.completion({
+        result: Any = self.openai_service.completion({
             'messages': messages,
             'model': model,
             'stream': False,
             'jsonMode': False
         })
-        logging.info("Completion generated successfully")
-
+        logging.info(f"Completion generated successfully for model: {model}")
         return result

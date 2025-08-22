@@ -1,15 +1,13 @@
 import os
 import json
-from typing import List, Dict, Any
 import logging
-
+from typing import Any, Dict, List
 from dotenv import load_dotenv
 from langfuse import Langfuse
 from S01.utils_S01 import configure_logging
 
-load_dotenv()
 
-# Configure logging using the generic function
+load_dotenv()
 configure_logging("logs_langfuse_python.txt")
 
 
@@ -20,12 +18,12 @@ class LangfuseService:
     """
 
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize Langfuse client with environment variables.
         """
         logging.info("Initializing LangfuseService and Langfuse client.")
-        self.langfuse = Langfuse(
+        self.langfuse: Langfuse = Langfuse(
             secret_key=os.getenv('LANGFUSE_SECRET_KEY'),
             public_key=os.getenv('LANGFUSE_PUBLIC_KEY'),
             host=os.getenv('LANGFUSE_HOST')
@@ -51,7 +49,7 @@ class LangfuseService:
         return span.trace_id
 
 
-    def create_span(self, name: str, input: Any = None):
+    def create_span(self, name: str, input: Any = None) -> Any:
         """
         Create a new span within the current trace.
 
@@ -60,7 +58,7 @@ class LangfuseService:
             input (Any, optional): Input data for the span.
 
         Returns:
-            Span: The created span object.
+            Any: The created span object.
         """
         logging.info(f"Creating new span: {name}")
         with self.langfuse.start_as_current_span(name=name) as span:
@@ -86,21 +84,21 @@ class LangfuseService:
         ) as generation:
             generation.update(
                 output=output.choices[0].message.content,
-                usage_details={"input_tokens": 10, "output_tokens": 25}  # Example token usage
+                usage_details={"input_tokens": 10, "output_tokens": 25}
             )
         logging.info("Span finalized")
 
 
-    def finalize_trace(self, original_messages: List[Dict[str, Any]], generated_responce: List[Dict[str, Any]]) -> None:
+    def finalize_trace(self, original_messages: List[Dict[str, Any]], generated_responce: List[Any]) -> None:
         """
         Finalize the trace with input and output messages.
 
         Args:
             original_messages (List[Dict[str, Any]]): Original input messages.
-            generated_responce (List[Dict[str, Any]]): Generated output messages.
+            generated_responce (List[Any]): Generated output messages.
         """
         logging.info("Finalizing trace with input and output messages.")
-        input_messages = [msg for msg in original_messages if msg.get('role') != 'system']
+        input_messages: List[Dict[str, Any]] = [msg for msg in original_messages if msg.get('role') != 'system']
         with self.langfuse.start_as_current_span(name="finalize-trace") as span:
             span.update_trace(
                 input=json.dumps(input_messages),

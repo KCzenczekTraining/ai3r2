@@ -16,9 +16,11 @@ are based on historical events.
 
 - `E03` This script automates data processing and validation. It downloads a text file, evaluates arithmetic questions, updates the answers using OpenAI's GPT model, and submits a report to a Agents HQ.
 
-- `E04` As the assignment for this topic was more about creating a proper prompt in an external app, I decided to focus here on two things: integration with Langfuse and memory management.
+- `E04` As the assignment for this topic was more about creating a proper prompt in an external app, I decided to focus here on integration with Langfuse.
  
   **langfuse_python** This is a Flask-based API for orchestrating chat completions and observability using Langfuse and OpenAI. It exposes a `/api/chat` endpoint that receives chat requests, creates traces and spans for each request using Langfuse,    and calls OpenAI to generate chat completions. The application logs all major steps and errors for traceability, and supports graceful shutdown. Services include `ChatService` (handles OpenAI completions) and `LangfuseService` (manages traces,       spans, and generations for observability and debugging).
+
+  **langfuse_prompt** This is a Flask-based API for chat completions with robust observability and tracing using Langfuse and OpenAI. The application is designed for experimentation, debugging, and analysis of conversational AI flows, with a focus on transparency and traceability. It leverages prompts predefined in the Langfuse platform, enabling consistent and reusable prompt templates. Each request to the `/api/chat` endpoint creates a new trace in Langfuse, recording the input messages, generated responses, and tracking by `session_id` and `user_id` for detailed analytics. The core logic is organized into modular services for OpenAI communication, assistant orchestration, and Langfuse integration. All key steps and errors are logged for debugging and performance monitoring. The API returns the generated response and session ID to the client, providing full traceability for every interaction.
 
 ## Requirements
 

@@ -1,14 +1,13 @@
-import os
-from typing import Dict, Any
-import logging
 
+import os
+import logging
+from typing import Any, Dict
 from dotenv import load_dotenv
 from openai import OpenAI
 from S01.utils_S01 import configure_logging
 
-load_dotenv()
 
-# Configure logging using the generic function
+load_dotenv()
 configure_logging("logs_langfuse_python.txt")
 
 
@@ -17,12 +16,14 @@ class OpenAIService:
     Service for interacting with OpenAI API.
     """
 
-    def __init__(self):
+
+    def __init__(self) -> None:
         """
         Initialize OpenAI client.
         """
         logging.info("Initializing OpenAIService and OpenAI client.")
-        self.client = OpenAI()
+        self.client: OpenAI = OpenAI()
+
 
     def completion(self, config: Dict[str, Any]) -> Any:
         """
@@ -35,10 +36,10 @@ class OpenAIService:
             Any: Completion result from OpenAI API.
         """
         logging.info(f"Calling OpenAI API for completion with model: {config.get('model', 'gpt-4.1-nano')}")
-        messages = config['messages']
-        model = config.get('model', 'gpt-4.1-nano')
-        stream = config.get('stream', False)
-        json_mode = config.get('jsonMode', False)
+        messages: Any = config['messages']
+        model: str = config.get('model', 'gpt-4.1-nano')
+        stream: bool = config.get('stream', False)
+        json_mode: bool = config.get('jsonMode', False)
 
         logging.info(f"Generating completion with model={model}, stream={stream}, json_mode={json_mode}")
 

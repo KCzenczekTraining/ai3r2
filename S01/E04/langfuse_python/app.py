@@ -17,28 +17,29 @@ Logging:
 - All major steps and errors are logged for traceability and debugging.
 """
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
+
 import signal
 import uuid
-from typing import Dict, Any
-
-from flask import Flask, request, jsonify
 import logging
-from S01.utils_S01 import configure_logging
+from typing import Dict, Any, List
+from flask import Flask, request, jsonify
 
 from chat_service import ChatService
 from langfuse_service import LangfuseService
 from middleware.error_handler import error_handler
+from S01.utils_S01 import configure_logging
 
-
-# Configure logging using the generic function
 configure_logging("logs_langfuse_python.txt")
 
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
 app.register_error_handler(Exception, error_handler)
 
-chat_service = ChatService()
-langfuse_service = LangfuseService()
+chat_service: ChatService = ChatService()
+langfuse_service: LangfuseService = LangfuseService()
 
 
 @app.route('/api/chat', methods=['POST'])
@@ -49,13 +50,13 @@ def chat() -> Any:
     Returns:
         Any: JSON response containing the completion and trace ID.
     """
-    logging.info("Received new chat request.")
-    data = request.get_json()
-    user_messages = data.get('messages', [])
-    conversation_id = data.get('conversation_id', str(uuid.uuid4()))
+    logging.info(f"Received new chat request.")
+    data: Dict[str, Any] = request.get_json()
+    user_messages: List[Dict[str, Any]] = data.get('messages', [])
+    conversation_id: str = data.get('conversation_id', str(uuid.uuid4()))
 
-    logging.info("Creating trace for chat request.")
-    trace_id = langfuse_service.create_trace({
+    logging.info(f"Creating trace for chat request.")
+    trace_id: str = langfuse_service.create_trace({
         'id': str(uuid.uuid4()),
         'name': 'Chaty-Chat',
         'session_id': conversation_id,
@@ -63,28 +64,35 @@ def chat() -> Any:
     })
 
     try:
-        system_messages = [{'role': 'system', 'content': 'You are a helpful assistant.', 'name': 'Norika'}]
-        all_messages = [*system_messages, *user_messages]
-        generated_responce = []
+        system_messages: List[Dict[str, Any]] = [
+            {'role': 'system', 'content': 'You are a helpful assistant.', 'name': 'Norika'}
+        ]
+
+        all_messages: List[Any] = [*system_messages, *user_messages]
+
+        generated_response: List[str] = []
 
         logging.info("Creating main span for chat completion.")
         main_span = langfuse_service.create_span('Main Completion', all_messages)
+
+
         try:
             logging.info("Calling OpenAI for chat completion.")
             main_completion = chat_service.completion(all_messages, 'gpt-4.1-nano')
             langfuse_service.finalize_span(all_messages, main_completion)
-            main_message = main_completion.choices[0].message.content
+            main_message: str = main_completion.choices[0].message.content
             all_messages.append(main_message)
-            generated_responce.append(main_message)
-
+            generated_response.append(main_message)
             main_span.update(output=main_message)
-        except Exception as e:
-            main_span.update(error=str(e))
-            logging.error(f"Error during OpenAI completion: {e}")
+        except Exception as exc:
+            main_span.update(error=str(exc))
+            logging.error(f"Error during OpenAI completion: {exc}")
             raise
 
+
         logging.info("Finalizing trace for chat request.")
-        langfuse_service.finalize_trace(user_messages, generated_responce)
+        langfuse_service.finalize_trace(user_messages, generated_response)
+
 
         return jsonify({
             'completion': main_completion.choices[0].message.content,
@@ -92,12 +100,12 @@ def chat() -> Any:
             'trace_id': trace_id
         })
 
-    except Exception as e:
-        logging.error(f"Error in chat endpoint: {e}")
-        return jsonify({'error': str(e)}), 500
+    except Exception as exc:
+        logging.error(f"Error in chat endpoint: {exc}")
+        return jsonify({'error': str(exc)}), 500
 
 
-def graceful_shutdown(*args):
+def graceful_shutdown(*args: Any) -> None:
     """
     Handle graceful shutdown of the application.
     """
@@ -107,6 +115,7 @@ def graceful_shutdown(*args):
 
 
 signal.signal(signal.SIGINT, graceful_shutdown)
+
 
 if __name__ == '__main__':
     app.run(port=3004)
